@@ -29,3 +29,6 @@ models/
 .vscode/
 
 *.log
+
+notebooks/catboost_info
+notebooks/outputs
