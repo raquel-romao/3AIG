@@ -1,0 +1,46 @@
+project:
+  name: complaint2concern
+
+data:
+  local_data_dir: data/raw
+  kaggle_input_dir: /kaggle/input/triagegeist
+  train_file: train.csv
+  test_file: test.csv
+  complaints_file: chief_complaints.csv
+  complaints_join_key: patient_id
+  complaints_text_col: chief_complaint_raw
+  include_patient_history: true
+  patient_history_file: patient_history.csv
+  patient_history_join_key: patient_id
+  id_col: patient_id
+  target_col: triage_acuity
+  text_col: chief_complaint_raw
+  leakage_columns:
+    - disposition
+    - ed_los_hours
+
+features:
+  baseline_mode: structured  # structured | text_tfidf
+  tfidf_max_features: 20000
+  tfidf_ngram_range: [1, 2]
+
+model:
+  name: catboost
+  params:
+    iterations: 400
+    depth: 6
+    learning_rate: 0.05
+
+embeddings:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  batch_size: 64
+  cache_train_embeddings: true
+
+train:
+  seed: 42
+  valid_size: 0.2
+  artifacts_dir: outputs/artifacts
+
+inference:
+  artifact_path: outputs/artifacts/baseline_artifact.joblib
+  submission_path: outputs/submission.csv
