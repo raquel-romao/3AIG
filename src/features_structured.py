@@ -19,11 +19,27 @@ def infer_structured_columns(
     id_col: str,
     explicit_drop_cols: Iterable[str] | None = None,
 ) -> list[str]:
-    """Infer structured columns by excluding id/target/text and explicit drops."""
+    """Infer structured columns by excluding id/target/text and explicit drops.
+
+    Also excludes columns containing list/dict/set values, which are not valid
+    scalar tabular features for the default sklearn preprocessing pipeline.
+    """
     drop = {target_col, text_col, id_col}
     if explicit_drop_cols:
         drop.update(explicit_drop_cols)
-    return [c for c in df.columns if c not in drop]
+
+    candidate_cols = [c for c in df.columns if c not in drop]
+    safe_cols: list[str] = []
+    for col in candidate_cols:
+        s = df[col]
+        if s.dtype == "object":
+            sample = s.dropna().head(200)
+            has_unhashable = sample.apply(lambda v: isinstance(v, (list, dict, set))).any()
+            if has_unhashable:
+                continue
+        safe_cols.append(col)
+
+    return safe_cols
 
 
 def _one_hot_encoder() -> OneHotEncoder:

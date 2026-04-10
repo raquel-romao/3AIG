@@ -26,9 +26,16 @@ def encode_complaints(
     texts: Iterable[str],
     model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
     batch_size: int = 64,
+    backend: str | None = None,
     normalize_embeddings: bool = True,
+    **_: object,
 ) -> np.ndarray:
-    """Generate frozen embeddings for complaint text."""
+    """Generate frozen embeddings for complaint text.
+
+    The current implementation uses sentence-transformers.
+    The ``backend`` argument is accepted for compatibility with notebook code
+    that may pass backend selectors (for example ``backend='sentence_transformers'``).
+    """
     embedder = load_embedder(model_name=model_name)
     clean_text = preprocess_text_series(texts)
     embs = embedder.encode(
