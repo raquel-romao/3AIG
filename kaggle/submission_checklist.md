@@ -1,11 +1,11 @@
-# Kaggle submission checklist
+# Submission verification
 
-- [ ] Notebook runs end-to-end from clean Kaggle session.
-- [ ] Uses only triage-time variables (no leakage).
-- [ ] `src/` logic copied or packaged into notebook cells.
-- [ ] Random seed fixed for reproducibility.
-- [ ] Final model + config clearly identified.
-- [ ] Validation metrics reported (accuracy, macro-F1, off-by-1).
-- [ ] TODO items called out: undertriage, disagreement, review flags.
-- [ ] `submission.csv` generated with correct columns and row count.
-- [ ] Submission file attached and sent to competition.
+Local reproducibility and results are recorded in `reports/reproduced/`. These remaining platform actions are not asserted as complete:
+
+- [ ] Fresh Kaggle-session run succeeds with current code and dependencies.
+- [ ] Notebook/version URL and code commit are recorded.
+- [ ] Current prediction file matches sample-submission IDs/order, contains 1-5 labels and no missing values.
+- [ ] Prediction checksum is recorded with the uploaded file.
+- [ ] If submitted, competition receipt/score is recorded accurately.
+
+See `final_submission_manifest.md` for the current execution instructions.

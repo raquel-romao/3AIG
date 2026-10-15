@@ -28,6 +28,24 @@ def evaluate_multiclass(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, Any
         "confusion_matrix": confusion_matrix(y_true, y_pred).tolist(),
     }
 
-    # TODO: add undertriage/severe-undertriage metrics with class-order awareness.
-    # TODO: add subgroup and robustness slices for clinically meaningful error analysis.
+    metrics.update(evaluate_acuity(y_true, y_pred))
     return metrics
+
+
+def evaluate_acuity(y_true, y_pred) -> Dict[str, float]:
+    """Evaluate acuity levels 1-5; a larger predicted number means undertriage."""
+    true = np.asarray(y_true, dtype=float)
+    pred = np.asarray(y_pred, dtype=float)
+    if true.ndim != 1 or true.shape != pred.shape or not true.size:
+        raise ValueError('Labels must be non-empty, equal-length 1-D arrays')
+    if not (np.isin(true, [1, 2, 3, 4, 5]).all() and np.isin(pred, [1, 2, 3, 4, 5]).all()):
+        raise ValueError('Use actual acuity levels 1-5, not encoded labels')
+    high = true <= 2
+    return {
+        'accuracy': float(accuracy_score(true, pred)),
+        'macro_f1': float(f1_score(true, pred, average='macro', zero_division=0)),
+        'off_by_1': float(np.mean(np.abs(true - pred) <= 1)),
+        'undertriage_rate': float(np.mean(pred > true)),
+        'severe_undertriage_rate': float(np.mean(pred - true >= 2)),
+        'recall_esi_1_2': float(np.mean(pred[high] <= 2)) if high.any() else float('nan'),
+    }

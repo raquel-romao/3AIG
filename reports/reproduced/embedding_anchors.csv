@@ -1,0 +1,11 @@
+embedding_feature,dim,importance_mean,n_high_activation_cases,anchor_terms
+emb_099,99,727.2,321,"yesterday, moderate, removal, mild, headache, resolved, moderate headache, removal request, week, week cough, skin, tag removal"
+emb_031,31,700.2,320,"query, referral, constant, joint, today, onset today, minor joint, joint ache, ache, query constant, onset, counselling"
+emb_070,70,661.8,322,"chest, pain, diaphoresis, chest pain, wall pain, chest wall, minor chest, wall, pain diaphoresis, dissection, dissection suspected, aortic dissection"
+emb_191,191,658.0,323,"red painful, red, painful, painful eye, eye, swelling, eyelid swelling, eyelid, constant, retinal, detachment, retinal detachment"
+emb_245,245,653.0,323,"mild, pain, low, low pain, mild low, pain mild, scrotal pain, scrotal, worsening, removal, movement, worsening movement"
+emb_092,92,648.6,323,"intermittent, trauma, blunt, travel, prophylaxis question, prophylaxis, travel prophylaxis, high, motor, accident, motor vehicle, vehicle accident"
+emb_364,364,568.6,321,"laceration actively, actively, scalp, actively bleeding, scalp laceration, bleeding, appendicitis, appendicitis clinically, days, adrenal insufficiency, acute adrenal, insufficiency"
+emb_326,326,553.8,322,"history, prior history, prior, torsion, failure, failure hypoxia, hypoxia, respiratory failure, respiratory, testicular, testicular torsion, cardiology paperwork"
+emb_297,297,542.2,324,"diaphoresis, chest, pain, dyspnoea, chest pain, pain diaphoresis, chest tightness, tightness, tightness dyspnoea, exertional chest, exertional, dyspnoea exertion"
+emb_348,348,521.6,324,"pain, shingles, shingles pain, worsening hours, hours, worsening, exertional, exertional chest, seasonal allergy, allergy symptoms, allergy, seasonal"

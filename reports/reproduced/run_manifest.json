@@ -1,0 +1,137 @@
+{
+  "run_utc": "2026-10-15T13:47:42.352016+00:00",
+  "git_commit": null,
+  "source_sha256": {
+    "configs/base.yaml": "766bec37ad288e5367482d428fd9c02f553dc3d2ce3d375c4ff3cee231cc2dfe",
+    "configs/minilm_catboost.yaml": "a5c1b9fe6e044ad95d3e5d610702fc743637a61cb54223e0a03134fcb8f7ce3e",
+    "configs/tfidf_lgbm.yaml": "e48a0e50bc64374364ef869c66444b865dcebc05b56b4f6bde2940186af32f41",
+    "scripts/export_submission.py": "369d6f3e647dbd8f6f46e7bf7ba9674820f4b36d7d377454714e0f18b79ddbe2",
+    "scripts/publish_results.py": "6bc05307df650058d50a17ecd71db989936eb48e2a7b54dd33b3dec08a5ecce9",
+    "scripts/run_local.sh": "f92a8bb73edd07531239a7af5ff5929acf857dcba539fac647fd605dc8e9fe7a",
+    "scripts/run_notebook.py": "c6a973ed2e85e193da231ffe25cce1929b200414f943430158293697581fd43f",
+    "src/__init__.py": "f62427649e7e3d8ccbc910e482627e3d7e1dca6990d1c9246a8942049535bc82",
+    "src/config.py": "f971273f9075d5acc9da79d5f9b2908bfc031d14bd20dc7ae0f299b342cff343",
+    "src/data_io.py": "79092bb0fc1ccf02ef4f5ee67bcf5adc1c4d3bc65d2baaa053756d51d7af3495",
+    "src/embeddings.py": "dcd6ce640c06fa29f5d64402705ec89c369f32f0e8845adf7e6e80467063e837",
+    "src/evaluate.py": "20e93d7a7e71570611f06b9cfe9a234ab449f97b3c210b9b272191ffab6bb0b1",
+    "src/features_structured.py": "c6aed57291134cc47f83228ddf1ca0b438170563e0e437ec68f428ee01a77b53",
+    "src/features_text.py": "88f9e71db4541dd3de87e610d636804d3b55fead48c42639665e31f7d064005b",
+    "src/inference.py": "61e0a03e8e0e9301202ae6cff6065d14ee6c733d4ee6a19d2a66c684705ef608",
+    "src/preprocess.py": "1b0312ff21ecdfdcaa7d02caa8b261cc85cdfe566a1b242925584183b08ecaae",
+    "src/provenance.py": "8975d550003260ce9a06b6213475a78dcbbff76816a95cd9352b95bc88ee0007",
+    "src/train_baseline.py": "57964e16cfbd54ca3a19da780df4888b95bfc131b49ff7c9f0b2710ffa0a1d71",
+    "src/train_fusion.py": "17ab79a89668db207cad89abb4a5fc7c6b5c1cc8554e627462e3724656055ce2",
+    "src/utils.py": "9e1cd8364ccde1933ce404772c07e75f1f9f37abe4817e3a9cbff36756a9ad14",
+    "src/validation.py": "8c3ca8a36bac1a81d39f04f4050ec17640c10571d4d490786fdebc262559fe7f"
+  },
+  "data_sha256": {
+    "train": "f5bac56edbe3b643f928ced4a64f477a617ad59a6670fd68c12f1c490124478f",
+    "test": "0457589a1b396e19e1ab92d96cbf7f6590cabd58268b7b39087ab7e14b27642e",
+    "complaints": "d7d1d262b69973897299e732fa770f0d2e460a1e732695026ceb7def49b7cf28",
+    "history": "671eeaa87c5e1275b52a15ee281ab30beb22caaf11b51ac9617c3ed255350f03"
+  },
+  "python": "3.11.15",
+  "platform": "Darwin",
+  "packages": {
+    "numpy": "2.4.3",
+    "pandas": "3.0.1",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.8.0",
+    "catboost": "1.2.10",
+    "lightgbm": "4.6.0",
+    "sentence-transformers": "5.3.0",
+    "torch": "2.10.0",
+    "matplotlib": "3.10.8",
+    "umap-learn": "0.5.11"
+  },
+  "config": {
+    "project": {
+      "name": "complaint2concern_minilm_catboost"
+    },
+    "data": {
+      "local_data_dir": "data/raw",
+      "kaggle_input_dir": "/kaggle/input/triagegeist",
+      "train_file": "train.csv",
+      "test_file": "test.csv",
+      "complaints_file": "chief_complaints.csv",
+      "complaints_join_key": "patient_id",
+      "complaints_text_col": "chief_complaint_raw",
+      "include_patient_history": true,
+      "patient_history_file": "patient_history.csv",
+      "patient_history_join_key": "patient_id",
+      "id_col": "patient_id",
+      "target_col": "triage_acuity",
+      "text_col": "chief_complaint_raw",
+      "leakage_columns": [
+        "disposition",
+        "ed_los_hours"
+      ]
+    },
+    "features": {
+      "baseline_mode": "structured",
+      "tfidf_max_features": 20000,
+      "tfidf_ngram_range": [
+        1,
+        2
+      ]
+    },
+    "model": {
+      "name": "catboost",
+      "params": {
+        "iterations": 500,
+        "depth": 6,
+        "learning_rate": 0.05
+      }
+    },
+    "embeddings": {
+      "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+      "batch_size": 64,
+      "cache_train_embeddings": true
+    },
+    "train": {
+      "seed": 42,
+      "valid_size": 0.2,
+      "artifacts_dir": "outputs/artifacts"
+    },
+    "inference": {
+      "artifact_path": "outputs/artifacts/fusion_artifact.joblib",
+      "submission_path": "outputs/submission_minilm_catboost.csv"
+    }
+  },
+  "sample_n": null,
+  "training_rows": 80000,
+  "n_splits": 5,
+  "split_mode": "stratified",
+  "encoder_revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
+  "checks": {
+    "review_flag_rate": 0.191125,
+    "high_acuity_share_flagged": 0.5787442773054284,
+    "typo_prediction_stability": 0.9625,
+    "shortened_prediction_stability": 0.9325,
+    "site_holdout_executed": false,
+    "shuffled_text_executed": false,
+    "submission_exported": true
+  },
+  "analysis_notebook_source_sha256": "0f4e11fcdda0ae8e62c7acea5ba456040cf6b5be45b4b69fd57384d8b9c29fe2",
+  "artifacts_sha256": {
+    "calibration.csv": "22164a2a2a2a70af2a1394c6b07d13c65aa1f162831b40435264b752503e74bb",
+    "complaint_frequency.csv": "3b97fd047859f2434adc3d781717b420c1aca9ef96801d530f8e328edeb5056e",
+    "cv_summary.csv": "50f572d2cb4a86cbe7f828b4aba2ad43c8098b72eddd6057a16aabe9d299bcce",
+    "embedding_anchors.csv": "7b98e12f8b7d65efbc18c382a0f2e5dcc0ae0893cbb9d4244776190fd5945db8",
+    "feature_importance.csv": "a086a55bba30cbc305750d9581e1731b53f32801f527a40abb9812ec2ea6f183",
+    "fold_metrics.csv": "a004f77101aa8b74a53c56492dc8b7332202cd996cb3d1d9e981a87683458e2c",
+    "modality_importance.csv": "5cd7b9e2a0f97c1796c9a81c6e1ce112734d01f3e65f7da31457323365749e76",
+    "oof_metrics.csv": "0c598579af0e9eca0d75b9a33c5670c547d8e7570621a2c442e25aa9c6f70c5c",
+    "oof_predictions.npz": "c7f190cbbd86309e2b4966f483526e8ea64f3297fffb82a17594977654b7309d",
+    "per_class.csv": "90941e5e4395b02c10a0c8a09a35db967043aba944513e87948523a77d639a83",
+    "subgroups.csv": "9b774a972ba6c2217daba7fd73db92b57a51c8796a7627a89ae39ba05ff8433b",
+    "submission_notebook_cv.csv": "9681a451a058e189d3bdbae2c62f5d2715be7e2d58a72f5136686b3e9a4df697",
+    "tfidf_terms.csv": "624254fcbcfabc060dbc4ca27b2016b54e5d78dd4061a28e178b9a0780d0edd0"
+  },
+  "limitations": [
+    "Synthetic competition data",
+    "Repeated complaint text may cross random folds",
+    "No demonstrated external clinical validity",
+    "Review thresholds derived descriptively on OOF predictions"
+  ]
+}

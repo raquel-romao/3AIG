@@ -9,6 +9,16 @@ import pandas as pd
 
 
 WHITESPACE_RE = re.compile(r"\s+")
+ABBREVIATIONS = {
+    'uti': 'urinary tract infection', 'urti': 'upper respiratory tract infection',
+    'loc': 'loss of consciousness', 'gi': 'gastrointestinal', 'bp': 'blood pressure',
+    'dka': 'diabetic ketoacidosis', 'af': 'atrial fibrillation',
+    'mva': 'motor vehicle accident', 'sti': 'sexually transmitted infection',
+    'nstemi': 'non st elevation myocardial infarction',
+    'ibs': 'irritable bowel syndrome', 'stemi': 'st elevation myocardial infarction',
+    'gcs': 'glasgow coma scale', 'ecg': 'electrocardiogram',
+}
+ABBREVIATION_RE = re.compile(r'\b(' + '|'.join(ABBREVIATIONS) + r')\b')
 NON_ALNUM_RE = re.compile(r"[^a-z0-9\s]")
 
 
@@ -20,9 +30,10 @@ def clean_chief_complaint(text: str) -> str:
     - remove punctuation
     - collapse whitespace
     """
-    if text is None:
+    if text is None or pd.isna(text):
         return ""
     value = str(text).strip().lower()
+    value = ABBREVIATION_RE.sub(lambda match: ABBREVIATIONS[match.group(0)], value)
     value = NON_ALNUM_RE.sub(" ", value)
     value = WHITESPACE_RE.sub(" ", value)
     return value.strip()

@@ -1,0 +1,5 @@
+model,block,share_mean,share_std
+structured_plus_emb_fusion,structured,0.33628868017990216,0.005011993333456961
+structured_plus_emb_fusion,text_embedding,0.6637113198200879,0.005011993333456951
+structured_plus_tfidf,structured,0.042804701335599785,0.0018713841903380056
+structured_plus_tfidf,text_tfidf,0.9571952986643989,0.0018713841903379793

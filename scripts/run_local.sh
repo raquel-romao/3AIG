@@ -8,6 +8,6 @@ echo "[2/3] Training fusion model (MiniLM + CatBoost)..."
 python -m src.train_fusion --config configs/minilm_catboost.yaml
 
 echo "[3/3] Exporting fusion submission..."
-python scripts/export_submission.py --config configs/minilm_catboost.yaml
+python -m scripts.export_submission --config configs/minilm_catboost.yaml
 
 echo "Done. Check outputs/ for artifacts and submission CSVs."

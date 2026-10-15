@@ -11,7 +11,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-from src.config import load_config
+from src.config import load_config, as_path
 from src.data_io import load_train_test
 from src.embeddings import encode_complaints, maybe_cache_embeddings
 from src.evaluate import evaluate_multiclass
@@ -70,13 +70,11 @@ def train_fusion(cfg: Dict[str, Any]) -> Dict[str, Any]:
     model.fit(x_tr, y_tr)
 
     y_pred = np.asarray(model.predict(x_va)).reshape(-1)
-    metrics = evaluate_multiclass(y_true=y_va, y_pred=y_pred)
+    metrics = evaluate_multiclass(y_true=label_encoder.inverse_transform(y_va), y_pred=label_encoder.inverse_transform(y_pred.astype(int)))
 
-    # TODO: plug in undertriage metrics by acuity ordering.
-    # TODO: add text-vs-structure disagreement analysis here.
-    # TODO: add review-flag logic for high-risk disagreement/low confidence cases.
+    # Cross-validated disagreement and review-flag analyses live in the analysis notebook.
 
-    out_dir = ensure_dir(Path(cfg["train"].get("artifacts_dir", "outputs/artifacts")))
+    out_dir = ensure_dir(as_path(cfg["train"].get("artifacts_dir", "outputs/artifacts")))
     artifact_path = out_dir / "fusion_artifact.joblib"
 
     joblib.dump(

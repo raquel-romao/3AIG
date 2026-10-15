@@ -9,6 +9,8 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from src.validation import validate_submission
+from src.config import as_path
 from src.data_io import load_train_test, save_submission
 from src.embeddings import encode_complaints
 from src.preprocess import preprocess_text_series
@@ -16,7 +18,7 @@ from src.preprocess import preprocess_text_series
 
 def predict_from_artifact(artifact_path: str | Path, test_df: pd.DataFrame) -> np.ndarray:
     """Run prediction on test data from a saved training artifact."""
-    artifact = joblib.load(artifact_path)
+    artifact = joblib.load(as_path(artifact_path))
     model = artifact["model"]
     feature_mode = artifact.get("feature_mode", "structured")
     text_col = artifact["text_col"]
@@ -47,7 +49,7 @@ def predict_from_artifact(artifact_path: str | Path, test_df: pd.DataFrame) -> n
         raise ValueError(f"Unsupported feature mode: {feature_mode}")
 
     pred_encoded = np.asarray(model.predict(x)).reshape(-1)
-    return artifact["label_encoder"].inverse_transform(pred_encoded.astype(int))
+    return artifact["label_encoder"].inverse_transform(pred_encoded.astype(int)).astype(int)
 
 
 def export_submission_from_artifact(cfg: Dict, artifact_path: str | Path, output_path: str | Path) -> Path:
@@ -58,4 +60,5 @@ def export_submission_from_artifact(cfg: Dict, artifact_path: str | Path, output
     id_col = cfg["data"]["id_col"]
     target_col = cfg["data"]["target_col"]
     sub_df = pd.DataFrame({id_col: test_df[id_col], target_col: preds})
+    validate_submission(sub_df, test_df[id_col], id_col, target_col)
     return save_submission(sub_df, output_path)

@@ -24,10 +24,7 @@ def ensure_dir(path: str | Path) -> Path:
 
 
 def make_classifier(model_name: str, params: Dict[str, Any], n_classes: int):
-    """Create classifier with safe fallbacks.
-
-    Preferred order: CatBoost -> LightGBM -> LogisticRegression fallback.
-    """
+    """Create an explicitly selected classifier; never silently substitute models."""
     model_name = model_name.lower()
     if model_name == "catboost":
         try:
@@ -40,6 +37,8 @@ def make_classifier(model_name: str, params: Dict[str, Any], n_classes: int):
             "eval_metric": "TotalF1",
             "verbose": False,
             "random_seed": 42,
+            "allow_writing_files": False,
+            "thread_count": 4,
         }
         default.update(params)
         return CatBoostClassifier(**default)
@@ -55,15 +54,18 @@ def make_classifier(model_name: str, params: Dict[str, Any], n_classes: int):
             "num_class": n_classes,
             "random_state": 42,
             "n_estimators": 300,
+            "n_jobs": 4,
+            "verbosity": -1,
         }
         default.update(params)
         return LGBMClassifier(**default)
 
+    if model_name != "logistic_regression":
+        raise ValueError(f"Unsupported model: {model_name}")
     default_lr = {
         "max_iter": 1000,
-        "multi_class": "multinomial",
         "solver": "lbfgs",
-        "n_jobs": -1,
+        "n_jobs": 4,
     }
     default_lr.update(params)
     return LogisticRegression(**default_lr)

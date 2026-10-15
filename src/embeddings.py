@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable
 
@@ -10,6 +11,7 @@ import numpy as np
 from src.preprocess import preprocess_text_series
 
 
+@lru_cache(maxsize=2)
 def load_embedder(model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
     """Load a sentence-transformer encoder for complaint embeddings."""
     try:
@@ -36,6 +38,8 @@ def encode_complaints(
     The ``backend`` argument is accepted for compatibility with notebook code
     that may pass backend selectors (for example ``backend='sentence_transformers'``).
     """
+    if backend not in (None, "sentence_transformers"):
+        raise ValueError(f"Unsupported embedding backend: {backend}")
     embedder = load_embedder(model_name=model_name)
     clean_text = preprocess_text_series(texts)
     embs = embedder.encode(

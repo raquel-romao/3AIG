@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-from src.config import load_config
+from src.config import load_config, as_path
 from src.data_io import load_train_test
 from src.evaluate import evaluate_multiclass
 from src.features_structured import fit_transform_structured, infer_structured_columns
@@ -85,9 +85,9 @@ def train_baseline(cfg: Dict[str, Any]) -> Dict[str, Any]:
 
     pred = model.predict(x_va)
     pred = np.asarray(pred).reshape(-1)
-    metrics = evaluate_multiclass(y_true=y_va, y_pred=pred)
+    metrics = evaluate_multiclass(y_true=label_encoder.inverse_transform(y_va), y_pred=label_encoder.inverse_transform(pred.astype(int)))
 
-    out_dir = ensure_dir(Path(cfg["train"].get("artifacts_dir", "outputs/artifacts")))
+    out_dir = ensure_dir(as_path(cfg["train"].get("artifacts_dir", "outputs/artifacts")))
     artifact_path = out_dir / "baseline_artifact.joblib"
     artifact = {
         "model": model,

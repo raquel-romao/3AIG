@@ -32,3 +32,10 @@ models/
 
 notebooks/catboost_info
 notebooks/outputs
+
+# Generated training logs, local submissions and Kaggle bundles
+catboost_info/
+submission.csv
+submission_*.csv
+triagegeist_code_assets.zip
+.jupyter/
